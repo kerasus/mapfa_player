@@ -86,11 +86,11 @@ var InitPage = function() {
 
     function playerDataAdapter(data) {
         return {
-            video_src: (data.streamURL) ? data.streamURL : null,
-            video_poster: (data.bannerURL) ? data.bannerURL : null,
-            logo_src: (data.logoURL) ? data.logoURL : null,
-            logo_link: (data.logo_link) ? data.logo_link : null,
-            logo_size: (data.logo_size) ? data.logo_size : null
+            video_src: (data.streamURL) ? data.streamURL : ( (getParam('video_src')) ? getParam('video_src') : null ),
+            video_poster: (data.bannerURL) ? data.bannerURL : ( (getParam('video_poster')) ? getParam('video_poster') : null ),
+            logo_src: (data.logoURL) ? data.logoURL : ( (getParam('logo_src')) ? getParam('logo_src') : null ),
+            logo_link: (data.logo_link) ? data.logo_link : ( (getParam('logo_link')) ? getParam('logo_link') : null ),
+            logo_size: (data.logo_size) ? data.logo_size : ( (getParam('logo_size')) ? getParam('logo_size') : null )
         };
     }
 
@@ -108,29 +108,37 @@ var InitPage = function() {
                     loadPlayer(playerDataAdapter(response.data))
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert('مشکلی در دریافت اطلاعات رخ داده است. لطفا مجددا صفحه را باز کنید.')
+                    if (getParam('video_src')) {
+                        loadPlayer(playerDataAdapter({}))
+                    } else {
+                        alert('مشکلی در دریافت اطلاعات رخ داده است. لطفا مجددا صفحه را باز کنید.')
+                    }
                 }
             }
         );
     }
 
     function getParam(param) {
-        return (new URL(window.location.href)).searchParams.get('jobId');
+        return (new URL(window.location.href)).searchParams.get('param');
     }
 
     function init(jobId) {
-        // loadPlayer({
-        //     video_src: 'https://streaming-stg.aggr-services.com/dvr/5bfbe8b4-ffe8-462c-8633-0c4cfcb60615/1612171660442/main.m3u8',
-        //     video_poster: 'https://cdn.alaatv.com/media/thumbnails/1029/1029001sane.jpg',
-        //     logo_src: 'https://cdn.alaatv.com/upload/logo_20190508105212_20190512113140.png',
-        //     logo_link: 'https://alaatv.com/',
-        //     logo_size: 150
-        // })
         getPlayerData(apiAddress, jobId)
+    }
+
+    function initTest() {
+        loadPlayer({
+            video_src: 'https://streaming-stg.aggr-services.com/dvr/5bfbe8b4-ffe8-462c-8633-0c4cfcb60615/1612171660442/main.m3u8',
+            video_poster: 'https://cdn.alaatv.com/media/thumbnails/1029/1029001sane.jpg',
+            logo_src: 'https://cdn.alaatv.com/upload/logo_20190508105212_20190512113140.png',
+            logo_link: 'https://alaatv.com/',
+            logo_size: 150
+        })
     }
 
     return {
         init,
+        initTest,
         getParam,
     };
 }();
