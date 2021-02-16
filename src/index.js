@@ -52,7 +52,7 @@ var InitPage = function() {
             delete config.url
         }
         if (!data.logo_size) {
-            config.logo_size = 50
+            config.width = 50
         }
 
         return config
@@ -86,10 +86,10 @@ var InitPage = function() {
 
     function playerDataAdapter(data) {
         return {
-            video_src: (data.streamURL) ? data.streamURL : ( (getParam('video_src')) ? getParam('video_src') : null ),
-            video_poster: (data.bannerURL) ? data.bannerURL : ( (getParam('video_poster')) ? getParam('video_poster') : null ),
-            logo_src: (data.logoURL) ? data.logoURL : ( (getParam('logo_src')) ? getParam('logo_src') : null ),
-            logo_link: (data.logo_link) ? data.logo_link : ( (getParam('logo_link')) ? getParam('logo_link') : null ),
+            video_src: (data.streamSource) ? data.streamSource : ( (getParam('video_src')) ? getParam('video_src') : null ),
+            video_poster: (data.posterSource) ? data.posterSource : ( (getParam('video_poster')) ? getParam('video_poster') : null ),
+            logo_src: (data.logoSource) ? data.logoSource : ( (getParam('logo_src')) ? getParam('logo_src') : null ),
+            logo_link: (data.logoURL) ? data.logoURL : ( (getParam('logo_link')) ? getParam('logo_link') : null ),
             logo_size: (data.logo_size) ? data.logo_size : ( (getParam('logo_size')) ? getParam('logo_size') : null )
         };
     }
@@ -105,7 +105,7 @@ var InitPage = function() {
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    loadPlayer(playerDataAdapter(response.data))
+                    loadPlayer(playerDataAdapter(response))
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     if (getParam('video_src')) {
@@ -119,7 +119,7 @@ var InitPage = function() {
     }
 
     function getParam(param) {
-        return (new URL(window.location.href)).searchParams.get('param');
+        return (new URL(window.location.href)).searchParams.get(param);
     }
 
     function init(jobId) {
